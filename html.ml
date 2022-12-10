@@ -67,6 +67,8 @@ let close_div ch =
   close_balise ch "div"
 
 
+let img ch classs source =
+  fprintf ch "<img class=\"%s\" src=\"%s\"/>" classs source
 
 let absolute_url_regexp = Str.regexp "\\(.+://\\)\\|#\\|mailto:"
 
