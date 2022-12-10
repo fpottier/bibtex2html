@@ -55,7 +55,7 @@ let eprint = ref true
 let eprint_prefix = ref "http://arxiv.org/abs/"
 let revkeys = ref false
 
-type table_kind = Table | DL | NoTable
+type table_kind = Table | DL | NoTable | Div
 let table = ref Table
 
 (* internal name, plus optional external name *)
@@ -388,11 +388,13 @@ let open_table ch = match !table with
   | Table -> Html.open_balise ch "table"
   | DL -> Html.open_balise ch "dl"
   | NoTable -> ()
+  | Div -> Html.open_div ch "bib_table"
 
 let close_table ch = match !table with
   | Table -> Html.close_balise ch "table"
   | DL -> Html.close_balise ch "dl"
   | NoTable -> ()
+  | Div -> Html.close_div ch
 
 let open_row ch = match !table with
   | Table ->
@@ -403,6 +405,8 @@ let open_row ch = match !table with
       Html.open_balise ch "dt"; output_string ch "\n"
   | NoTable ->
       Html.open_balise ch "p"
+  | Div ->
+      Html.open_div ch "bib_row"
 
 let new_column ch = match !table with
   | Table ->
@@ -413,6 +417,8 @@ let new_column ch = match !table with
       Html.open_balise ch "dd"; output_string ch "\n"
   | NoTable ->
       output_string ch "\n"
+  | Div ->
+      ()
 
 let close_row ch = match !table with
   | Table ->
@@ -423,6 +429,24 @@ let close_row ch = match !table with
       Html.close_balise ch "dd"; output_string ch "\n"
   | NoTable ->
       Html.close_balise ch "p"
+  | Div ->
+      Html.close_div ch
+
+let open_pub ch = match !table with
+  | Table
+  | DL
+  | NoTable ->
+      ()
+  | Div ->
+      Html.open_div ch "bib_pub"
+
+let close_pub ch = match !table with
+  | Table
+  | DL
+  | NoTable ->
+      ()
+  | Div ->
+      Html.close_div ch
 
 let one_entry_summary ch biblio (_,b,((_,k,f) as e)) =
   if !Options.debug then begin
@@ -438,12 +462,17 @@ let one_entry_summary ch biblio (_,b,((_,k,f) as e)) =
     latex2html ch (if !use_keys then k else Hashtbl.find cite_tab k);
     if !multiple then Html.close_href ch;
   end else
-    if !table <> NoTable then output_string ch "&nbsp;";
+  begin
+    match !table with
+    | Table | DL -> output_string ch "&nbsp;"
+    | NoTable | Div -> ()
+  end;
   Html.close_anchor ch;
   if (not !nokeys) || !multiple then output_string ch "]";
   (* end of JK changes *)
   output_string ch "\n";
   new_column ch;
+  open_pub ch;
   latex2html ch b;
   if !linebreak then Html.open_balise ch "br /";
   output_string ch "\n";
@@ -466,6 +495,7 @@ let one_entry_summary ch biblio (_,b,((_,k,f) as e)) =
   display_notes ch e;
   if !print_keywords then display_keywords ch e;
   output_string ch "\n";
+  close_pub ch;
   close_row ch
 
 (* summary file f.html *)

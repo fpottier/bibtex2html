@@ -50,7 +50,7 @@ val eprint_prefix : string ref
 val links_in_bib_file : bool ref
 val revkeys : bool ref
 
-type table_kind = Table | DL | NoTable
+type table_kind = Table | DL | NoTable | Div
 val table : table_kind ref
 
 (*s Inserting links for some BibTeX fields. *)

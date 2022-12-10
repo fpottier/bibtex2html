@@ -388,6 +388,7 @@ Usage: bibtex2html <options> [filename]
              add a web link for that BibTeX field, with the supplied name
   -note field
              declare a note field
+  -div       use <div> tags instead of TABLEs
   -dl        use DL lists instead of TABLEs
   -unicode   use Unicode characters for some LaTeX macros (as HTML entities)
   -html-entities
@@ -497,6 +498,8 @@ i*)
 	bib_entries := false; single := true; parse_rec rem
     | ("-both" | "--both") :: rem ->
 	both := true; parse_rec rem
+    | ("-div" | "--div") :: rem ->
+	table := Div; parse_rec rem
     | ("-dl" | "--dl") :: rem ->
 	table := DL; parse_rec rem
     | ("-unicode" | "--unicode") :: rem ->
