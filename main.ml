@@ -388,6 +388,8 @@ Usage: bibtex2html <options> [filename]
              add a web link for that BibTeX field, with the supplied name
   -note field
              declare a note field
+  -note-html field
+             declare a note field in HTML format
   -div       use <div> tags instead of TABLEs
   -dl        use DL lists instead of TABLEs
   -unicode   use Unicode characters for some LaTeX macros (as HTML entities)
