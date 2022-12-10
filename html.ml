@@ -60,6 +60,14 @@ let close_anchor ch =
   close_balise ch "a"
 
 
+let open_div ch s =
+  open_balise ch (sprintf "div class=\"%s\"" s)
+
+let close_div ch =
+  close_balise ch "div"
+
+
+
 let absolute_url_regexp = Str.regexp "\\(.+://\\)\\|#\\|mailto:"
 
 let is_absolute_url u =
