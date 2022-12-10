@@ -312,6 +312,14 @@ let display_notes ch e =
        with Not_found -> ())
     !note_fields
 
+let display_image ch e =
+  (* If there is an "image" field in the BibTeX entry,
+     display it in an HTML <img> element.  *)
+  match Expand.get_lowercase_field e "image" with
+  | exception Not_found -> ()
+  | src ->
+      Html.img ch "bib_img" src
+
 let display_keywords ch e =
   try
     let k = Expand.get_lowercase_field e "keywords" in
@@ -496,6 +504,7 @@ let one_entry_summary ch biblio (_,b,((_,k,f) as e)) =
   if !print_keywords then display_keywords ch e;
   output_string ch "\n";
   close_pub ch;
+  display_image ch e;
   close_row ch
 
 (* summary file f.html *)
